@@ -15,16 +15,46 @@
     - functions, polynomials, signals, lots of other stuff
   - Rn 
 
-3. What's a linear transformation?
+3. what operations can we do on a vector?
+  
+4. What's a linear transformation?
   - T(x + y) = T(x) + T(y)
   - T(ax) = aT(x) 
 any guess why that's called linear?
 
+For the Club: 
+We are going to build our own graphics engine (on Helix) with an emphasis on animations.
 
-4. What's the (parametric) equation of a line 
+
+Assignment:
+
+    Write a project that:
+        draws a shape (triangle) in the first quadrant
+        create a function R2->R2 that 
+            reflects that shape across the x-axis 
+            translates that shape below the x-axis 
+        animate that transformation 
+        create a function that flips the shape across the line y=x 
+    Share and _explain_ your demo 
+
+    Start thinking about what our geometry engine should look like. 
+    I'm picturing 3 modules:
+        - Math Util 
+            Vector2, Matrix4 
+        - Data Model 
+            AddTriangle()
+            AddTranformationFunction() 
+        - Visualization 
+            DrawTriangle 
+            AnimateTriangle(triangle, transformation)
+
+
+
+5. What's the (parametric) equation of a line 
   - 2D 
   - 3D 
   - nD 
 
-5. what's a dot product?
+
+
 
