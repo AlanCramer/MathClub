@@ -1,0 +1,30 @@
+
+
+1. what's a function (mathematially)
+  - transformation R1->R1
+  - domain, range
+  - graph 
+  - Rn->Rm 
+
+2. What's a vector
+  - physics (engineering)
+  - comp sci 
+  - math 
+    - addition, scale
+    - associativity, communitivity, distributivity 
+    - functions, polynomials, signals, lots of other stuff
+  - Rn 
+
+3. What's a linear transformation?
+  - T(x + y) = T(x) + T(y)
+  - T(ax) = aT(x) 
+any guess why that's called linear?
+
+
+4. What's the (parametric) equation of a line 
+  - 2D 
+  - 3D 
+  - nD 
+
+5. what's a dot product?
+
