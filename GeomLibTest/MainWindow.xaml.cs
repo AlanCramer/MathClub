@@ -126,8 +126,66 @@ namespace GeomLibTest
             // var pos = e.GetPosition(View);
             // Debug.WriteLine($"Click at {pos}");
 
-            StartAnimation();
+            StartAnim();
+            //StartAnimation();
         }
+
+
+        private Stopwatch? _sw;
+        private EventHandler? _renderHandler;
+        //private bool _isAnimating;
+
+        private void StartAnim(double durationSeconds = 3.0) // tweak as desired
+        {
+            StopAnim();
+
+            _sw = Stopwatch.StartNew();
+            _isAnimating = true;
+
+            long lastTicks = 0;
+
+            _renderHandler = (_, __) =>
+            {
+                if (_sw == null) return;
+
+                // Total time since start
+                double elapsed = _sw.Elapsed.TotalSeconds;
+
+                // Normalized progress 0..1
+                double t = durationSeconds <= 0 ? 1.0 : Math.Min(1.0, elapsed / durationSeconds);
+
+                // Optional: debug frame cadence
+                long nowTicks = _sw.ElapsedTicks;
+                if (lastTicks != 0)
+                {
+                    double dtMs = (nowTicks - lastTicks) * 1000.0 / Stopwatch.Frequency;
+                    Debug.WriteLine($"dt={dtMs:F2}ms, t={t:F3}");
+                }
+                lastTicks = nowTicks;
+
+                UpdatePointsVisual(t);
+
+                if (t >= 1.0)
+                {
+                    Debug.WriteLine("[INFO] Animation finished.");
+                    StopAnim();
+                }
+            };
+
+            CompositionTarget.Rendering += _renderHandler;
+        }
+
+        private void StopAnim()
+        {
+            if (_renderHandler != null)
+                CompositionTarget.Rendering -= _renderHandler;
+
+            _renderHandler = null;
+            _sw?.Stop();
+            _sw = null;
+            _isAnimating = false;
+        }
+
 
         private void StartAnimation()
         {
@@ -149,7 +207,7 @@ namespace GeomLibTest
             _timer?.Stop();
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(16) // ~60Hz
+                Interval = TimeSpan.FromMilliseconds(5) // ~60Hz
             };
 
             _timer.Tick += (_, _) =>

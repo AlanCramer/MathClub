@@ -5,24 +5,58 @@ What's a function?
     Domain 
     Range 
     notation - 
-       f(x) : R1 -> R1 
+       f: R1 -> R1 (e.g. sin or x*x)
        f: R2 -> R1   (e.g. magnitude)
+       f: R2xR2 -> R2  (e.g. add)
     
     Does a function have to have a graph?
 
 
 What's a Vector? 
-
     Column of Numbers 
     A magnitude (length) and direction 
     A thing that we know how to add and scale 
 
-
 Vector operations: 
 
-    Add, Scale  
-    Dot Product 
-    Cross Product 
+    Add            f: RNxRN -> RN 
+    Scale          f: RNxR1 -> RN 
+    Dot Product    f: ?
+    Cross Product  f: ?
 
-
+What's the domain and range of dot and cross products?
 What's the length of [1,1,1] ?
+What's the angle between [0, 4] and [2,0]?
+
+
+Equation of line  
+Equation of a parabola
+Equation of a quintic
+Equation of circle
+Parametric forms 
+
+Quadradic formula - why?
+
+Throw a ball - at every moment, the ball has:
+  a position (a point - or we can think of it as a vector)
+  a velocity (how fast and what direction) (a vector)
+  and an acceleration (gravity, wind, etc.) (a vector)
+
+velocity is "how fast the ball position is changing" 
+acceleration is "how fast the velocity is changing" 
+
+constant acceleration 
+a(t) = (-9.8m/s)/s    : not changing as time changes 
+v(t) = v0 + a*t       : changing linearly with time 
+p(t) = p0 + v0*t + (1/2) a*t*t  
+
+These are vector equations!  
+They work (look the same) in 1, 2, or 3 dimensions. 
+  1: throw a ball straight up
+  2: throw a ball to the outfield
+  3: throw a ball in a side wind 
+
+for 2D: 
+    p(t) = <x(t), y(t)>
+    v(t) = <v0 cos(theta) * t, v0 sin(theta) * t >
+    a(t) = <0, -9.8>
