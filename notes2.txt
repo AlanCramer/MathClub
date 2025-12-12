@@ -1,0 +1,28 @@
+
+
+What's a function?
+
+    Domain 
+    Range 
+    notation - 
+       f(x) : R1 -> R1 
+       f: R2 -> R1   (e.g. magnitude)
+    
+    Does a function have to have a graph?
+
+
+What's a Vector? 
+
+    Column of Numbers 
+    A magnitude (length) and direction 
+    A thing that we know how to add and scale 
+
+
+Vector operations: 
+
+    Add, Scale  
+    Dot Product 
+    Cross Product 
+
+
+What's the length of [1,1,1] ?

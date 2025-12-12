@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "transformAxis", "transformA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransformPlaneDemo", "TransformPlaneDemo\TransformPlaneDemo.csproj", "{48690016-9613-576B-35D9-3E9D7D839495}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeomLibTest", "GeomLibTest\GeomLibTest.csproj", "{870F0533-9067-4B5D-9664-878ABFE96A22}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AngryParabolas", "AngryParabolas\AngryParabolas.csproj", "{08EA7DDF-306B-4E11-B505-5B047DBF00CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{48690016-9613-576B-35D9-3E9D7D839495}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48690016-9613-576B-35D9-3E9D7D839495}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48690016-9613-576B-35D9-3E9D7D839495}.Release|Any CPU.Build.0 = Release|Any CPU
+		{870F0533-9067-4B5D-9664-878ABFE96A22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{870F0533-9067-4B5D-9664-878ABFE96A22}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{870F0533-9067-4B5D-9664-878ABFE96A22}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{870F0533-9067-4B5D-9664-878ABFE96A22}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08EA7DDF-306B-4E11-B505-5B047DBF00CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08EA7DDF-306B-4E11-B505-5B047DBF00CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08EA7DDF-306B-4E11-B505-5B047DBF00CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08EA7DDF-306B-4E11-B505-5B047DBF00CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,45 @@
+﻿<Window x:Class="AngryParabolas.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:helix="http://helix-toolkit.org/wpf"
+        mc:Ignorable="d"
+        Title="Projectile Vector Demo"
+        Width="900" Height="700"
+        Background="Black">
+    <Grid>
+        <!-- Main 3D viewport -->
+        <helix:HelixViewport3D x:Name="View"
+                               ShowViewCube="False"
+                               ShowCoordinateSystem="False"
+                               IsPanEnabled="False"
+                               IsRotationEnabled="False"
+                               IsZoomEnabled="True"
+                               Background="#202020">
+            <helix:DefaultLights />
+        </helix:HelixViewport3D>
+
+        <!-- HUD overlay for timer + status text -->
+        <StackPanel Orientation="Vertical"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Margin="10">
+            <TextBlock x:Name="TimerText"
+                       Text="t = 0.00 s"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       Foreground="White"
+                       Background="#66000000"
+                       Padding="6" />
+            <TextBlock x:Name="StatusText"
+                       Text="Click to choose launch direction"
+                       FontSize="12"
+                       Foreground="White"
+                       Background="#66000000"
+                       Padding="4"
+                       Margin="0,4,0,0" />
+        </StackPanel>
+    </Grid>
+</Window>
+

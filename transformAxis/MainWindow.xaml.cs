@@ -118,7 +118,7 @@ namespace transformAxis
                 double x = XMin + t * (XMax - XMin);
 
                 double yStart = 0.0;
-                double yEnd = transformSin(x); 
+                double yEnd = transformXsquared(x); // transformSin(x); 
 
                 _pointData.Add((x, yStart, yEnd));
                 pts.Add(new Point3D(x, yStart, 0));     // initial positions on x-axis
