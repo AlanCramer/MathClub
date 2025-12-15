@@ -25,8 +25,10 @@ Vector operations:
     Cross Product  f: ?
 
 What's the domain and range of dot and cross products?
-What's the length of [1,1,1] ?
-What's the angle between [0, 4] and [2,0]?
+What's the length of <1, 1>?
+What's the length of <1,1,1> ?
+What's the angle between <0, 4> and <2,0>?
+What's the angle between <1, 1> and <1,0>?
 
 
 Equation of line  

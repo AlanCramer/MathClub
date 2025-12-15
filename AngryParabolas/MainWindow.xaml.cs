@@ -7,13 +7,14 @@ using System.Windows.Media.Media3D;
 using System.Windows.Threading;
 using HelixToolkit.Wpf;
 
+
 namespace AngryParabolas
 {
     public partial class MainWindow : Window
     {
-        private LinesVisual3D _axes;
-        private SphereVisual3D _ball;
-        private ArrowVisual3D _aimArrow;
+        private LinesVisual3D? _axes;
+        private SphereVisual3D? _ballVis;  // visual representation of the _ball
+        private ArrowVisual3D? _aimArrow;
 
         private readonly Stopwatch _stopwatch = new();
         private readonly DispatcherTimer _uiTimer;
@@ -21,9 +22,11 @@ namespace AngryParabolas
         private bool _isLaunched;
         private bool _isAiming;
 
+        private Ball? _ball;
+        private double _prevT;
 
-        private Vector3D _launchVelocity;
-        private Point3D _launchPosition;
+        private Point2D _launchPosition;
+        private Vector2D _launchVelocity;
         private const double Gravity = -9.81;
 
         public MainWindow()
@@ -92,7 +95,7 @@ namespace AngryParabolas
             View.Children.Add(_axes);
 
             // Ball at origin – make it bright
-            _ball = new SphereVisual3D
+            _ballVis = new SphereVisual3D
             {
                 Center = new Point3D(0, 0, 0),
                 Radius = 0.5,
@@ -100,7 +103,7 @@ namespace AngryParabolas
                 ThetaDiv = 64,
                 Material = MaterialHelper.CreateMaterial(Brushes.Yellow)
             };
-            View.Children.Add(_ball);
+            View.Children.Add(_ballVis);
 
             // Aim vector arrow – bright and a bit thicker
             _aimArrow = new ArrowVisual3D
@@ -113,7 +116,6 @@ namespace AngryParabolas
             };
             View.Children.Add(_aimArrow);
         }
-
         private void ResetSimulation()
         {
             Debug.WriteLine("[INFO] Resetting simulation state.");
@@ -121,10 +123,12 @@ namespace AngryParabolas
             _isLaunched = false;
             _isAiming = false;
 
-            _launchVelocity = new Vector3D();
-            _launchPosition = new Point3D(0, 0, 0);
+            _ball = null;
 
-            _ball.Center = _launchPosition;
+            _launchVelocity = new Vector2D(0, 0);
+            _launchPosition = new Point2D(0, 0);
+
+            _ballVis.Center = _launchPosition.ToP3();
             _aimArrow.Visible = false;
 
             _stopwatch.Reset();
@@ -133,6 +137,7 @@ namespace AngryParabolas
             TimerText.Text = "t = 0.00 s";
             StatusText.Text = "Click to choose launch direction";
         }
+
 
         private void OnViewportMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -178,9 +183,8 @@ namespace AngryParabolas
             }
             else
             {
-                // 👉 Second click while aiming: finalize vector and launch
-                var aimVec = _aimArrow.Point2 - _aimArrow.Point1;
-                var length = aimVec.Length;
+                var aimVec3 = _aimArrow.Point2 - _aimArrow.Point1;
+                var length = aimVec3.Length;
 
                 if (length < 0.1)
                 {
@@ -189,17 +193,17 @@ namespace AngryParabolas
                     return;
                 }
 
-                var direction = aimVec;
-                direction.Normalize();
+                // 2D direction from the 3D arrow (drop Z)
+                var dir2 = aimVec3.ToV2().Normalized();
+                var speed = length * 3.0;
 
-                var speed = length * 3.0; // scale factor for “how fast”
-                _launchVelocity = direction * speed;
-                _launchPosition = new Point3D(0, 0, 0);
-
-                Debug.WriteLine($"[INFO] Launching with v0 = {_launchVelocity}, |v0| = {speed:0.00}");
+                _launchPosition = new Point2D(0, 0);
+                _launchVelocity = dir2 * speed;
 
                 _isAiming = false;
-                Launch();
+
+                Launch(_launchPosition, dir2, speed);
+
             }
         }
 
@@ -220,12 +224,9 @@ namespace AngryParabolas
             var aimVec = _aimArrow.Point2 - _aimArrow.Point1;
             var length = aimVec.Length;
 
-            // Optional: simple status readout for debugging / teaching
             StatusText.Text =
                 $"Aiming: vector = ({aimVec.X:0.0}, {aimVec.Y:0.0}), |v| ≈ {length * 3.0:0.0}";
 
-            // Don't spam logs, but useful if something looks weird:
-            // Debug.WriteLine($"[DEBUG] Aiming update: head = {hitPoint}, length = {length:0.00}");
         }
 
 
@@ -271,15 +272,25 @@ namespace AngryParabolas
             return hit;
         }
 
-        private void Launch()
+        private void Launch(Point2D startPos, Vector2D dirUnit, double speed)
         {
+            Debug.Assert(Math.Abs(dirUnit.Length - 1.0) < 1e-6, "dirUnit should be normalized.");
+
+            _ball = new Ball(startPos, dirUnit * speed, radius: 0.5)
+            {
+                Acceleration = new Vector2D(0, Gravity), // or (0,0)
+                Restitution = 0.95
+            };
+
             _isLaunched = true;
-            _stopwatch.Restart();
+
+            _stopwatch.Restart();        // important
+            _prevT = 0.0;                // since stopwatch restarted
             _uiTimer.Start();
 
-            TimerText.Text = "t = 0.00 s";
-            StatusText.Text = $"Launch velocity: ({_launchVelocity.X:0.0}, {_launchVelocity.Y:0.0})";
+            StatusText.Text = "In flight (click to reset)";
         }
+
 
         private void UiTimerOnTick(object? sender, EventArgs e)
         {
@@ -292,25 +303,21 @@ namespace AngryParabolas
 
         private void OnRendering(object? sender, EventArgs e)
         {
-            if (!_isLaunched)
-                return;
+            if (!_isLaunched || _ball is null) return;
 
             var t = _stopwatch.Elapsed.TotalSeconds;
+            var dt = t - _prevT;
+            _prevT = t;
 
-            // Simple 2D projectile motion in XY, with gravity on Y
-            var x = _launchPosition.X + _launchVelocity.X * t;
-            var y = _launchPosition.Y + _launchVelocity.Y * t + 0.5 * Gravity * t * t;
+            // Common failure mode after breakpoints / window drag:
+            if (dt <= 0) return;
+            if (dt > 0.05) dt = 0.05;
 
-            _ball.Center = new Point3D(x, y, 0);
+            _ball.Step(dt);
 
-            // Stop when ball hits "ground" (y <= 0)
-            if (y <= 0 && t > 0.05)
-            {
-                Debug.WriteLine($"[INFO] Ball landed at t={t:0.00}, x={x:0.00}.");
-                _isLaunched = false;
-                _uiTimer.Stop();
-                StatusText.Text += "  (landed – click to reset)";
-            }
+            // Render
+            _ballVis.Center = _ball.Position.ToP3();
         }
+
     }
 }

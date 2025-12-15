@@ -32,8 +32,13 @@ namespace GeomLibTest
 
             Loaded += (_, _) =>
             {
-                InitializeScene();
+                // build the data model
                 InitializePoints();
+
+                // build the view
+                InitializeScene();
+
+                // animation tooling
                 InitializeRenderPoints();
                 UpdatePointsVisual(0.0);
             };
@@ -65,10 +70,6 @@ namespace GeomLibTest
             _startPts.Clear();
             _destPts.Clear();
 
-            // Option A: Annulus (existing)
-            //_startPts.AddRange(GeomUtil.SamplePointsInAnnulus(0.3, 3.5, 8, 24));
-
-            // Option B: Polygon boundary sampling (example)
             var poly = new Polygon3D(new[]
             {
                  new Point3D(-3, -2, 0),
@@ -105,7 +106,27 @@ namespace GeomLibTest
             _anim.Start(
                 durationSeconds: 3.0,
                 onTick: UpdatePointsVisual,
-                onFinished: () => Debug.WriteLine("[INFO] Animation finished."));
+                onFinished: () => {
+                    Debug.WriteLine("[INFO] Animation finished.");
+                    SwapStartPoints();
+                });
+        }
+
+
+        private void SwapStartPoints()
+        {
+            // Make the current rendered points become the new start points.
+            _startPts.Clear();
+            _startPts.AddRange(_destPts);
+
+            // Recompute destination from the new start points.
+            _destPts.Clear();
+            foreach (var p in _startPts)
+                _destPts.Add(GeomUtil.Transforms.InvertPoint(p, _circleCenter, CircleRadius));
+
+            //// Keep display stable: show start pose (which is already what's on-screen).
+            //// This is optional; it shouldn't change anything visually.
+            //UpdatePointsVisual(0.0);
         }
 
         private void UpdatePointsVisual(double t)
